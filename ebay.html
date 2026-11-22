@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eBay Fee &amp; Profit Calculator (2026) – Final Value &amp; Ad Rate Tool</title>
+  <meta name="description" content="Calculate eBay final value fees, per-order fixed fees, promoted listing ad fees, shipping costs, and net profit margin in real time." />
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #e53238;
+      --green: #059669;
+      --red: #dc2626;
+      --soft-bg: #f9fafb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+
+    .nav-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span { color: #f1641e; }
+
+    .nav-links a {
+      margin-left: 16px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+
+    .hero { margin-bottom: 24px; }
+
+    .hero h1 {
+      font-size: 1.9rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .calc-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .prefix {
+      position: absolute;
+      left: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px 10px 28px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.98rem;
+      color: var(--text);
+      background: #fff;
+    }
+
+    select { padding-left: 12px; }
+
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-reset {
+      margin-top: 8px;
+      width: 100%;
+      padding: 10px;
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .btn-reset:hover {
+      background: #eceff3;
+      color: var(--text);
+    }
+
+    .summary-box {
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    .summary-profit {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 4px 0;
+      color: var(--green);
+    }
+
+    .summary-profit.negative { color: var(--red); }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric-pill {
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .metric-pill .val {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .metric-pill .lbl {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .breakdown-list {
+      list-style: none;
+      font-size: 0.94rem;
+    }
+
+    .breakdown-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .breakdown-list li.total-row {
+      border-bottom: none;
+      border-top: 2px solid var(--border);
+      margin-top: 6px;
+      padding-top: 12px;
+      font-weight: 700;
+    }
+
+    .article-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .article-section h2 {
+      font-size: 1.45rem;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+
+    .article-section h2:first-child { margin-top: 0; }
+
+    .article-section p {
+      margin-bottom: 14px;
+      color: #374151;
+    }
+
+    .article-section ul {
+      margin: 0 0 16px 20px;
+      color: #374151;
+    }
+
+    .article-section li { margin-bottom: 6px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.93rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--soft-bg);
+      font-weight: 600;
+    }
+
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .footer-links { margin-bottom: 10px; }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .footer-links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-wrap">
+      <a href="index.html" class="logo">Seller<span>Calc</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Etsy Calc</a>
+        <a href="paypal.html">PayPal Calc</a>
+        <a href="ebay.html" class="active">eBay Calc</a>
+        <a href="#fee-guide">Fee Guide</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>eBay Fee &amp; Profit Calculator</h1>
+      <p>Estimate eBay final value fees, per-order fixed surcharges, promoted listing ad percentages, and net profit per sale.</p>
+    </section>
+
+    <section class="calc-grid">
+      <div class="card">
+        <h2>1. Enter Listing &amp; Cost Details</h2>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="soldPrice">Item Sold Price</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="soldPrice" value="50.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shippingCharged">Shipping Charged to Buyer</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="shippingCharged" value="8.00" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="itemCost">Item Cost (COGS)</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="itemCost" value="15.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shippingCost">Your Actual Shipping Cost</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="shippingCost" value="6.50" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="otherCost">Packaging &amp; Supplies</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="otherCost" value="1.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="promotedRate">Promoted Listings Ad (%)</label>
+            <div class="input-wrap">
+              <span class="prefix">%</span>
+              <input type="number" id="promotedRate" value="0" min="0" max="100" step="0.5" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="categoryRate">Category Final Value Fee Rate</label>
+          <select id="categoryRate">
+            <option value="13.25" selected>Most Categories – Standard (13.25%)</option>
+            <option value="14.95">Clothing, Shoes &amp; Accessories (14.95%)</option>
+            <option value="12.35">Books, Movies &amp; Music (12.35%)</option>
+            <option value="9.35">Guitars &amp; Basses (9.35%)</option>
+            <option value="10.0">Custom / Enter Custom % Below</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="customRateWrap" style="display:none;">
+          <label for="customRate">Custom Final Value Fee (%)</label>
+          <div class="input-wrap">
+            <span class="prefix">%</span>
+            <input type="number" id="customRate" value="10.0" min="0" max="100" step="0.05" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="perOrderFee">Per-Order Fixed Fee</label>
+          <select id="perOrderFee">
+            <option value="0.30" selected>Orders $10.00 or less ($0.30)</option>
+            <option value="0.40">Orders over $10.00 ($0.40)</option>
+          </select>
+        </div>
+
+        <button class="btn-reset" type="button" id="resetBtn">Reset to Default Values</button>
+      </div>
+
+      <div class="card">
+        <h2>2. Profit &amp; Fee Breakdown</h2>
+
+        <div class="summary-box">
+          <div class="summary-label">Estimated Net Profit</div>
+          <div class="summary-profit" id="netProfit">$0.00</div>
+          <div style="font-size:0.88rem; color:var(--muted);">
+            Total Order Amount: <strong id="totalOrder">$0.00</strong>
+          </div>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-pill">
+            <div class="val" id="profitMargin">0.0%</div>
+            <div class="lbl">Profit Margin</div>
+          </div>
+          <div class="metric-pill">
+            <div class="val" id="effectiveFeePct">0.0%</div>
+            <div class="lbl">Effective eBay Fee %</div>
+          </div>
+        </div>
+
+        <ul class="breakdown-list">
+          <li>
+            <span>Final Value Fee</span>
+            <span id="fvfAmount">$0.00</span>
+          </li>
+          <li>
+            <span>Per-Order Fixed Fee</span>
+            <span id="fixedAmount">$0.00</span>
+          </li>
+          <li>
+            <span>Promoted Listings Fee</span>
+            <span id="adAmount">$0.00</span>
+          </li>
+          <li>
+            <span><strong>Total eBay Fees</strong></span>
+            <span><strong id="totalEbayFees">$0.00</strong></span>
+          </li>
+          <li>
+            <span>Total Item &amp; Shipping Costs</span>
+            <span id="totalCosts">$0.00</span>
+          </li>
+          <li class="total-row">
+            <span>Net Profit</span>
+            <span id="netProfitBottom">$0.00</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <article class="article-section" id="fee-guide">
+      <h2>How eBay Seller Fees Are Calculated</h2>
+      <p>
+        eBay deducts fees from the total order amount paid by the buyer—which includes the item price, shipping charges, handling, and applicable taxes or import fees. Rather than collecting separate payment processing fees outside eBay, managed payments bundle standard selling costs into the final value fee plus a small per-order surcharge.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Fee Component</th>
+            <th>Typical Structure</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Final Value Fee</strong></td>
+            <td>~12.35% – 14.95% (varies by category)</td>
+            <td>Calculated on total order amount; tiered percentages may apply above certain dollar thresholds in select categories.</td>
+          </tr>
+          <tr>
+            <td><strong>Per-Order Fixed Fee</strong></td>
+            <td>$0.30 (≤ $10) or $0.40 (&gt; $10)</td>
+            <td>Charged once per completed buyer order, even if the buyer purchases multiple items in a single order.</td>
+          </tr>
+          <tr>
+            <td><strong>Promoted Listings</strong></td>
+            <td>Seller-set ad percentage</td>
+            <td>Applies if the buyer clicks your promoted ad and purchases within eBay's attribution window.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Tips to Keep eBay Margins Healthy</h2>
+      <ul>
+        <li><strong>Factor shipping into total order fees:</strong> Because eBay's percentage fee applies to the total amount collected from the buyer, offering "free shipping" by rolling postage into the item price does not increase your percentage fee—but undercharging shipping directly reduces your net profit.</li>
+        <li><strong>Watch ad rates on thin-margin items:</strong> A 5%–10% promoted ad rate on a low-margin item can wipe out profit quickly. Test ad percentages gradually and track return on ad spend (ROAS).</li>
+        <li><strong>Combine multiple items into one order when possible:</strong> The fixed per-order fee ($0.30 or $0.40) is charged per order rather than per line item.</li>
+      </ul>
+
+      <h2 id="faq">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>Does eBay charge final value fees on shipping?</h3>
+        <p>Yes. eBay calculates its final value percentage on the full order total paid by the buyer, including shipping and handling charges.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Why is there a per-order fee in addition to the percentage fee?</h3>
+        <p>eBay charges a flat per-order fee ($0.30 for orders of $10 or less, and $0.40 for orders over $10) to cover payment processing and transaction handling per order.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Are eBay fees refunded if an order is canceled or refunded?</h3>
+        <p>When a seller issues a refund or cancels a transaction properly, eBay generally credits back the corresponding final value fee and per-order fee (minus specific non-refundable adjustments depending on the case).</p>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <p>&copy; 2026 SellerCalc. Independent tool not affiliated with eBay Inc.</p>
+  </footer>
+
+  <script>
+    const ids = [
+      "soldPrice", "shippingCharged", "itemCost", "shippingCost",
+      "otherCost", "promotedRate", "categoryRate", "customRate", "perOrderFee"
+    ];
+
+    function fmt(num) {
+      const sign = num < 0 ? "-" : "";
+      return sign + "$" + Math.abs(num).toFixed(2);
+    }
+
+    function toggleCustomRate() {
+      const sel = document.getElementById("categoryRate").value;
+      document.getElementById("customRateWrap").style.display = sel === "10.0" ? "block" : "none";
+    }
+
+    function calculate() {
+      toggleCustomRate();
+
+      const soldPrice = parseFloat(document.getElementById("soldPrice").value) || 0;
+      const shippingCharged = parseFloat(document.getElementById("shippingCharged").value) || 0;
+      const itemCost = parseFloat(document.getElementById("itemCost").value) || 0;
+      const shippingCost = parseFloat(document.getElementById("shippingCost").value) || 0;
+      const otherCost = parseFloat(document.getElementById("otherCost").value) || 0;
+      const promotedPct = (parseFloat(document.getElementById("promotedRate").value) || 0) / 100;
+
+      const catVal = document.getElementById("categoryRate").value;
+      const fvfPct = (catVal === "10.0"
+        ? (parseFloat(document.getElementById("customRate").value) || 0)
+        : parseFloat(catVal)) / 100;
+
+      const fixedFee = parseFloat(document.getElementById("perOrderFee").value) || 0;
+
+      const totalOrder = soldPrice + shippingCharged;
+      const totalCosts = itemCost + shippingCost + otherCost;
+
+      const fvfAmount = totalOrder * fvfPct;
+      const fixedAmount = totalOrder > 0 ? fixedFee : 0;
+      const adAmount = totalOrder * promotedPct;
+
+      const totalEbayFees = fvfAmount + fixedAmount + adAmount;
+      const netProfit = totalOrder - totalCosts - totalEbayFees;
+
+      const margin = totalOrder > 0 ? (netProfit / totalOrder) * 100 : 0;
+      const effFeePct = totalOrder > 0 ? (totalEbayFees / totalOrder) * 100 : 0;
+
+      const profitEl = document.getElementById("netProfit");
+      profitEl.textContent = fmt(netProfit);
+      profitEl.classList.toggle("negative", netProfit < 0);
+
+      document.getElementById("totalOrder").textContent = fmt(totalOrder);
+      document.getElementById("profitMargin").textContent = margin.toFixed(1) + "%";
+      document.getElementById("effectiveFeePct").textContent = effFeePct.toFixed(1) + "%";
+
+      document.getElementById("fvfAmount").textContent = fmt(fvfAmount);
+      document.getElementById("fixedAmount").textContent = fmt(fixedAmount);
+      document.getElementById("adAmount").textContent = fmt(adAmount);
+      document.getElementById("totalEbayFees").textContent = fmt(totalEbayFees);
+      document.getElementById("totalCosts").textContent = fmt(totalCosts);
+      document.getElementById("netProfitBottom").textContent = fmt(netProfit);
+    }
+
+    ids.forEach(id => {
+      document.getElementById(id).addEventListener("input", calculate);
+      document.getElementById(id).addEventListener("change", calculate);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("soldPrice").value = "50.00";
+      document.getElementById("shippingCharged").value = "8.00";
+      document.getElementById("itemCost").value = "15.00";
+      document.getElementById("shippingCost").value = "6.50";
+      document.getElementById("otherCost").value = "1.00";
+      document.getElementById("promotedRate").value = "0";
+      document.getElementById("categoryRate").value = "13.25";
+      document.getElementById("customRate").value = "10.0";
+      document.getElementById("perOrderFee").value = "0.40";
+      calculate();
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
