@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Etsy Fee &amp; Profit Calculator (2026) – Free Seller Margin Tool</title>
+  <meta name="description" content="Calculate your exact Etsy listing, transaction, payment processing, and offsite ads fees. Free real-time Etsy profit margin calculator for US and global sellers." />
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #f1641e;
+      --accent-dark: #d95212;
+      --green: #059669;
+      --red: #dc2626;
+      --soft-bg: #f9fafb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+
+    .nav-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-links a {
+      margin-left: 18px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    main {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 1.9rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .calc-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .prefix {
+      position: absolute;
+      left: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px 10px 28px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.98rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s;
+    }
+
+    select { padding-left: 12px; }
+
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-reset {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .btn-reset:hover {
+      background: #eceff3;
+      color: var(--text);
+    }
+
+    .summary-box {
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    .summary-profit {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 4px 0;
+      color: var(--green);
+    }
+
+    .summary-profit.negative { color: var(--red); }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric-pill {
+      background: var(--soft-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .metric-pill .val {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .metric-pill .lbl {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .breakdown-list {
+      list-style: none;
+      font-size: 0.94rem;
+    }
+
+    .breakdown-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .breakdown-list li.total-row {
+      border-bottom: none;
+      border-top: 2px solid var(--border);
+      margin-top: 6px;
+      padding-top: 12px;
+      font-weight: 700;
+    }
+
+    /* AdSense-friendly Content Section */
+    .article-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .article-section h2 {
+      font-size: 1.45rem;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+
+    .article-section h2:first-child { margin-top: 0; }
+
+    .article-section h3 {
+      font-size: 1.1rem;
+      margin: 20px 0 8px;
+      color: var(--text);
+    }
+
+    .article-section p {
+      margin-bottom: 14px;
+      color: #374151;
+    }
+
+    .article-section ul {
+      margin: 0 0 16px 20px;
+      color: #374151;
+    }
+
+    .article-section li { margin-bottom: 6px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.93rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--soft-bg);
+      font-weight: 600;
+    }
+
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .footer-links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-wrap">
+      <a href="index.html" class="logo">Seller<span>Calc</span></a>
+      <nav class="nav-links">
+        <a href="#calculator">Calculator</a>
+        <a href="#fee-guide">Fee Guide</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="calculator">
+      <h1>Etsy Fee &amp; Profit Calculator</h1>
+      <p>Instantly calculate Etsy listing fees, 6.5% transaction fees, Etsy Payments processing fees, and your true net profit per order.</p>
+    </section>
+
+    <section class="calc-grid">
+      <!-- Input Panel -->
+      <div class="card">
+        <h2>1. Enter Order Details</h2>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="itemPrice">Item Sale Price</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="itemPrice" value="35.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shippingCharged">Shipping Charged to Buyer</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="shippingCharged" value="5.00" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="itemCost">Item Cost (Materials / COGS)</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="itemCost" value="10.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shippingCost">Your Actual Shipping Cost</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="shippingCost" value="4.50" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="form-group">
+            <label for="otherCost">Packaging &amp; Other Costs</label>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="otherCost" value="1.00" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity Sold</label>
+            <div class="input-wrap">
+              <span class="prefix">#</span>
+              <input type="number" id="quantity" value="1" min="1" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="offsiteAds">Offsite Ads Fee</label>
+          <select id="offsiteAds">
+            <option value="0" selected>No Offsite Ads (0%)</option>
+            <option value="0.15">Standard Offsite Ads (15% – Under $10k/yr)</option>
+            <option value="0.12">Mandatory Offsite Ads (12% – Over $10k/yr)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentRegion">Etsy Payments Region</label>
+          <select id="paymentRegion">
+            <option value="us" selected>United States (3.0% + $0.25)</option>
+            <option value="uk">United Kingdom (4.0% + £0.20)</option>
+            <option value="ca">Canada (3.0% + $0.25 CAD)</option>
+            <option value="eu">European Union (4.0% + €0.30)</option>
+            <option value="au">Australia (3.0% + $0.25 AUD)</option>
+          </select>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="includeListing" checked />
+          <label for="includeListing" style="margin:0; font-weight:500;">Include $0.20 listing fee per item</label>
+        </div>
+
+        <button class="btn-reset" type="button" id="resetBtn">Reset to Default Values</button>
+      </div>
+
+      <!-- Result Panel -->
+      <div class="card">
+        <h2>2. Profit &amp; Fee Breakdown</h2>
+
+        <div class="summary-box">
+          <div class="summary-label">Estimated Net Profit</div>
+          <div class="summary-profit" id="netProfit">$0.00</div>
+          <div style="font-size:0.88rem; color:var(--muted);">
+            Total Revenue: <strong id="totalRevenue">$0.00</strong>
+          </div>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-pill">
+            <div class="val" id="profitMargin">0.0%</div>
+            <div class="lbl">Profit Margin</div>
+          </div>
+          <div class="metric-pill">
+            <div class="val" id="roiPercent">0.0%</div>
+            <div class="lbl">Return on Cost (ROI)</div>
+          </div>
+        </div>
+
+        <ul class="breakdown-list">
+          <li>
+            <span>Listing Fee ($0.20 × qty)</span>
+            <span id="listingFee">$0.00</span>
+          </li>
+          <li>
+            <span>Transaction Fee (6.5%)</span>
+            <span id="transactionFee">$0.00</span>
+          </li>
+          <li>
+            <span>Payment Processing Fee</span>
+            <span id="paymentFee">$0.00</span>
+          </li>
+          <li>
+            <span>Offsite Ads Fee</span>
+            <span id="offsiteFee">$0.00</span>
+          </li>
+          <li>
+            <span><strong>Total Etsy Fees</strong></span>
+            <span><strong id="totalFees">$0.00</strong></span>
+          </li>
+          <li>
+            <span>Total Product &amp; Shipping Costs</span>
+            <span id="totalCosts">$0.00</span>
+          </li>
+          <li class="total-row">
+            <span>Net Profit</span>
+            <span id="netProfitBottom">$0.00</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Educational / AdSense Content Section -->
+    <article class="article-section" id="fee-guide">
+      <h2>How Etsy Seller Fees Work in 2026</h2>
+      <p>
+        Pricing handmade, vintage, or digital products on Etsy requires understanding every fee deducted from your order total. Many new sellers only account for the $0.20 listing fee and are surprised when transaction, payment processing, and shipping-related fees eat into their profit margins.
+      </p>
+      <p>
+        Below is the complete breakdown of standard Etsy fees for US-based shops using Etsy Payments.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Fee Type</th>
+            <th>Standard Rate (US)</th>
+            <th>When It Applies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Listing Fee</strong></td>
+            <td>$0.20 per item</td>
+            <td>Charged when you publish a listing and automatically renewed for $0.20 each time a unit sells.</td>
+          </tr>
+          <tr>
+            <td><strong>Transaction Fee</strong></td>
+            <td>6.5% of total price</td>
+            <td>Applied to the item price, shipping charged to the buyer, and gift wrapping combined.</td>
+          </tr>
+          <tr>
+            <td><strong>Payment Processing Fee</strong></td>
+            <td>3.0% + $0.25</td>
+            <td>Charged on the total order value (including shipping and applicable sales tax) when using Etsy Payments.</td>
+          </tr>
+          <tr>
+            <td><strong>Offsite Ads Fee</strong></td>
+            <td>15% or 12%</td>
+            <td>Only charged if a buyer clicks an external Etsy ad (Google, Meta, Pinterest) and buys within 30 days.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Step-by-Step Etsy Profit Calculation Example</h2>
+      <p>
+        Suppose you sell a custom ceramic mug for <strong>$35.00</strong> and charge the buyer <strong>$5.00</strong> for shipping. Your total gross revenue is <strong>$40.00</strong>. Your materials cost $10.00, actual postage costs $4.50, and packaging costs $1.00 (total costs = $15.50).
+      </p>
+      <ul>
+        <li><strong>Listing Fee:</strong> $0.20</li>
+        <li><strong>Transaction Fee (6.5% of $40.00):</strong> $2.60</li>
+        <li><strong>Payment Processing Fee (3% of $40.00 + $0.25):</strong> $1.45</li>
+        <li><strong>Total Etsy Fees:</strong> $4.25 (10.6% of total revenue)</li>
+        <li><strong>Net Profit:</strong> $40.00 − $15.50 − $4.25 = <strong>$20.25 (50.6% profit margin)</strong></li>
+      </ul>
+
+      <h2>Practical Ways to Protect Your Etsy Profit Margins</h2>
+      <p>
+        Because Etsy charges its 6.5% transaction fee on both the item price and the shipping fee, shifting costs from the item price to shipping does not lower your fees. Instead, consider these strategies:
+      </p>
+      <ul>
+        <li><strong>Bundle low-priced items:</strong> The fixed $0.20 listing fee and $0.25 payment fee take a massive percentage out of $5–$10 items. Selling multi-packs raises your average order value (AOV) and lowers your effective fee rate.</li>
+        <li><strong>Build a buffer for Offsite Ads:</strong> If your shop crosses $10,000 in sales over a 12-month period, Offsite Ads become mandatory at 12%. Adding a 2–3% pricing buffer across all listings prevents sudden margin shocks.</li>
+        <li><strong>Track true packaging and label costs:</strong> Tape, mailers, thermal labels, and bubble wrap typically add $0.50 to $1.50 per order. Always include them in your calculator inputs.</li>
+      </ul>
+
+      <h2 id="faq">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>Does Etsy charge fees on shipping?</h3>
+        <p>Yes. Both the 6.5% transaction fee and the payment processing fee (3% + $0.25 in the US) are calculated on the combined total of the item price and the shipping amount charged to the buyer.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I opt out of Etsy Offsite Ads?</h3>
+        <p>If your shop has earned less than $10,000 USD in the past 365 days, Offsite Ads are optional (15% fee) and you can turn them off in your Shop Manager settings. Once you exceed $10,000 in 12 months, participation becomes mandatory for the lifetime of the shop at a discounted 12% rate.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Are Etsy fees refunded if I cancel an order?</h3>
+        <p>When you issue a full refund and cancel an order, Etsy credits back your transaction fee and payment processing fee. However, the original $0.20 listing fee is generally non-refundable unless the entire order is canceled under specific conditions.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is a good profit margin for an Etsy shop?</h3>
+        <p>Most profitable handmade and print-on-demand Etsy shops target a net profit margin between <strong>30% and 50%</strong> after all fees, materials, and shipping costs. Digital product sellers often achieve 75% to 85% margins due to zero physical production or shipping expenses.</p>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <p>&copy; 2026 SellerCalc. Independent tool not affiliated with Etsy, Inc.</p>
+  </footer>
+
+  <script>
+    const regionRates = {
+      us: { pct: 0.03, fixed: 0.25 },
+      uk: { pct: 0.04, fixed: 0.20 },
+      ca: { pct: 0.03, fixed: 0.25 },
+      eu: { pct: 0.04, fixed: 0.30 },
+      au: { pct: 0.03, fixed: 0.25 }
+    };
+
+    const inputs = [
+      "itemPrice", "shippingCharged", "itemCost", "shippingCost",
+      "otherCost", "quantity", "offsiteAds", "paymentRegion", "includeListing"
+    ];
+
+    function fmt(num) {
+      const sign = num < 0 ? "-" : "";
+      return sign + "$" + Math.abs(num).toFixed(2);
+    }
+
+    function calculate() {
+      const itemPrice = parseFloat(document.getElementById("itemPrice").value) || 0;
+      const shippingCharged = parseFloat(document.getElementById("shippingCharged").value) || 0;
+      const itemCost = parseFloat(document.getElementById("itemCost").value) || 0;
+      const shippingCost = parseFloat(document.getElementById("shippingCost").value) || 0;
+      const otherCost = parseFloat(document.getElementById("otherCost").value) || 0;
+      const qty = Math.max(1, parseInt(document.getElementById("quantity").value, 10) || 1);
+      const offsiteRate = parseFloat(document.getElementById("offsiteAds").value) || 0;
+      const region = document.getElementById("paymentRegion").value;
+      const includeListing = document.getElementById("includeListing").checked;
+
+      const totalRevenue = (itemPrice * qty) + shippingCharged;
+      const totalCosts = (itemCost * qty) + shippingCost + otherCost;
+
+      const listingFee = includeListing ? (0.20 * qty) : 0;
+      const transactionFee = totalRevenue * 0.065;
+      const rate = regionRates[region] || regionRates.us;
+      const paymentFee = totalRevenue > 0 ? (totalRevenue * rate.pct + rate.fixed) : 0;
+      const offsiteFee = totalRevenue * offsiteRate;
+
+      const totalFees = listingFee + transactionFee + paymentFee + offsiteFee;
+      const netProfit = totalRevenue - totalCosts - totalFees;
+
+      const margin = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0;
+      const roi = totalCosts > 0 ? (netProfit / totalCosts) * 100 : 0;
+
+      const profitEl = document.getElementById("netProfit");
+      profitEl.textContent = fmt(netProfit);
+      profitEl.classList.toggle("negative", netProfit < 0);
+
+      document.getElementById("totalRevenue").textContent = fmt(totalRevenue);
+      document.getElementById("profitMargin").textContent = margin.toFixed(1) + "%";
+      document.getElementById("roiPercent").textContent = roi.toFixed(1) + "%";
+
+      document.getElementById("listingFee").textContent = fmt(listingFee);
+      document.getElementById("transactionFee").textContent = fmt(transactionFee);
+      document.getElementById("paymentFee").textContent = fmt(paymentFee);
+      document.getElementById("offsiteFee").textContent = fmt(offsiteFee);
+      document.getElementById("totalFees").textContent = fmt(totalFees);
+      document.getElementById("totalCosts").textContent = fmt(totalCosts);
+      document.getElementById("netProfitBottom").textContent = fmt(netProfit);
+    }
+
+    inputs.forEach(id => {
+      document.getElementById(id).addEventListener("input", calculate);
+      document.getElementById(id).addEventListener("change", calculate);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("itemPrice").value = "35.00";
+      document.getElementById("shippingCharged").value = "5.00";
+      document.getElementById("itemCost").value = "10.00";
+      document.getElementById("shippingCost").value = "4.50";
+      document.getElementById("otherCost").value = "1.00";
+      document.getElementById("quantity").value = "1";
+      document.getElementById("offsiteAds").value = "0";
+      document.getElementById("paymentRegion").value = "us";
+      document.getElementById("includeListing").checked = true;
+      calculate();
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
