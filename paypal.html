@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PayPal Fee Calculator (2026) – Goods, Services &amp; Invoice Fees</title>
+  <meta name="description" content="Calculate PayPal merchant, invoice, goods and services, and international fees instantly. Includes reverse calculator to see how much to ask for." />
+  <style>
+    :root {
+      --bg: #f7f8fa; --card: #ffffff; --text: #1f2937; --muted: #6b7280;
+      --border: #e5e7eb; --accent: #0070ba; --green: #059669; --soft-bg: #f9fafb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 20px; }
+    .nav-wrap { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-weight: 800; font-size: 1.2rem; color: var(--text); text-decoration: none; }
+    .logo span { color: #f1641e; }
+    .nav-links a { margin-left: 18px; text-decoration: none; color: var(--muted); font-size: 0.92rem; font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); font-weight: 700; }
+    main { max-width: 960px; margin: 32px auto; padding: 0 20px; }
+    .hero { margin-bottom: 24px; }
+    .hero h1 { font-size: 1.9rem; margin-bottom: 8px; }
+    .hero p { color: var(--muted); }
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .card h2 { font-size: 1.15rem; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    input[type="number"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
+    .summary-box { background: var(--soft-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-align: center; margin-bottom: 16px; }
+    .summary-label { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+    .summary-val { font-size: 2rem; font-weight: 800; color: var(--green); margin-top: 4px; }
+    .breakdown { list-style: none; font-size: 0.95rem; }
+    .breakdown li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .article-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 40px; }
+    .article-section h2 { font-size: 1.4rem; margin: 24px 0 12px; }
+    .article-section h2:first-child { margin-top: 0; }
+    .article-section p { margin-bottom: 14px; color: #374151; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.93rem; }
+    th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+    th { background: var(--soft-bg); }
+    footer { border-top: 1px solid var(--border); background: var(--card); padding: 24px 20px; text-align: center; color: var(--muted); font-size: 0.88rem; }
+    .footer-links { margin-bottom: 10px; }
+    .footer-links a { color: var(--muted); text-decoration: none; margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a href="index.html" class="logo">Seller<span>Calc</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Etsy Calc</a>
+        <a href="paypal.html" class="active">PayPal Calc</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>PayPal Fee Calculator</h1>
+      <p>Calculate exact PayPal fees for domestic goods &amp; services, invoicing, checkout, and international transfers.</p>
+    </section>
+
+    <section class="calc-grid">
+      <div class="card">
+        <h2>1. Enter Amount &amp; Fee Type</h2>
+        <div class="form-group">
+          <label for="amount">Amount ($ USD)</label>
+          <input type="number" id="amount" value="100.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label for="feeType">PayPal Transaction Type</label>
+          <select id="feeType">
+            <option value="2.99,0.49" selected>Goods &amp; Services / Standard (2.99% + $0.49)</option>
+            <option value="3.49,0.49">PayPal Checkout / Invoicing (3.49% + $0.49)</option>
+            <option value="2.89,0.49">QR Code / Standard Card (2.89% + $0.49)</option>
+            <option value="4.49,0.49">International Commercial (+1.5% → 4.49% + $0.49)</option>
+            <option value="4.99,0.49">International Invoicing (4.99% + $0.49)</option>
+            <option value="1.99,0.49">Charity / Nonprofit (1.99% + $0.49)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2. Fee &amp; Payout Breakdown</h2>
+        <div class="summary-box">
+          <div class="summary-label">You Will Receive (Net)</div>
+          <div class="summary-val" id="netReceive">$0.00</div>
+        </div>
+        <ul class="breakdown">
+          <li><span>PayPal Fee</span><strong id="ppFee">$0.00</strong></li>
+          <li><span>Effective Fee Rate</span><span id="effRate">0.0%</span></li>
+          <li><span><strong>To Receive Exact Amount, Ask For:</strong></span><strong style="color:#0070ba;" id="askFor">$0.00</strong></li>
+        </ul>
+      </div>
+    </section>
+
+    <article class="article-section">
+      <h2>PayPal Merchant Fee Rates (US, 2026)</h2>
+      <p>PayPal charges a percentage fee plus a fixed fee ($0.49 for USD transactions) whenever you receive commercial payments. Understanding which rate applies helps freelancers and e-commerce sellers price invoices accurately.</p>
+      <table>
+        <thead>
+          <tr><th>Transaction Type</th><th>Rate (USD)</th><th>Common Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Goods &amp; Services</td><td>2.99% + $0.49</td><td>Direct commercial transfers between PayPal accounts</td></tr>
+          <tr><td>PayPal Invoicing &amp; Checkout</td><td>3.49% + $0.49</td><td>Online store checkout buttons and PayPal invoices</td></tr>
+          <tr><td>International Commercial</td><td>+1.50% extra</td><td>Added when the buyer's PayPal account is outside the US</td></tr>
+        </tbody>
+      </table>
+
+      <h2>How Reverse PayPal Fee Calculation Works</h2>
+      <p>If you want to receive an exact net payout (for example, $100.00 after fees), simply adding 2.99% + $0.49 is not enough because PayPal also charges its percentage fee on the extra amount you added. The exact reverse formula is:</p>
+      <p><strong>Amount to Request = (Desired Net Amount + Fixed Fee) ÷ (1 − Percentage Rate)</strong></p>
+      <p>For a $100.00 net payout at 2.99% + $0.49, you should request ($100 + $0.49) ÷ 0.9701 = <strong>$103.59</strong>.</p>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <p>&copy; 2026 SellerCalc. Independent tool not affiliated with PayPal Holdings, Inc.</p>
+  </footer>
+
+  <script>
+    function calc() {
+      const amount = parseFloat(document.getElementById("amount").value) || 0;
+      const [pctStr, fixStr] = document.getElementById("feeType").value.split(",");
+      const pct = parseFloat(pctStr) / 100;
+      const fix = parseFloat(fixStr);
+
+      const fee = amount > 0 ? (amount * pct + fix) : 0;
+      const net = Math.max(0, amount - fee);
+      const eff = amount > 0 ? (fee / amount) * 100 : 0;
+      const ask = amount > 0 ? (amount + fix) / (1 - pct) : 0;
+
+      document.getElementById("netReceive").textContent = "$" + net.toFixed(2);
+      document.getElementById("ppFee").textContent = "$" + fee.toFixed(2);
+      document.getElementById("effRate").textContent = eff.toFixed(2) + "%";
+      document.getElementById("askFor").textContent = "$" + ask.toFixed(2);
+    }
+    document.getElementById("amount").addEventListener("input", calc);
+    document.getElementById("feeType").addEventListener("change", calc);
+    calc();
+  </script>
+</body>
+</html>

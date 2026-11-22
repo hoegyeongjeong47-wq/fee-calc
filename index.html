@@ -59,7 +59,10 @@
       font-weight: 500;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text);
+      font-weight: 700;
+    }
 
     main {
       max-width: 960px;
@@ -254,7 +257,6 @@
       font-weight: 700;
     }
 
-    /* AdSense-friendly Content Section */
     .article-section {
       background: var(--card);
       border: 1px solid var(--border);
@@ -342,7 +344,8 @@
     <div class="nav-wrap">
       <a href="index.html" class="logo">Seller<span>Calc</span></a>
       <nav class="nav-links">
-        <a href="#calculator">Calculator</a>
+        <a href="index.html" class="active">Etsy Calc</a>
+        <a href="paypal.html">PayPal Calc</a>
         <a href="#fee-guide">Fee Guide</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -590,7 +593,6 @@
     <div class="footer-links">
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
       <a href="contact.html">Contact</a>
     </div>
     <p>&copy; 2026 SellerCalc. Independent tool not affiliated with Etsy, Inc.</p>
